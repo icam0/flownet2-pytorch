@@ -115,7 +115,7 @@ class MpiSintelClean(MpiSintel):
 
 class MpiSintelCleanGray(MpiSintel):
     def __init__(self, args, is_cropped = False, root = '', replicates = 1):
-        super(MpiSintelClean, self).__init__(args, is_cropped = is_cropped, root = root, dstype = 'clean', replicates = replicates, grayscale=True)
+        super(MpiSintelCleanGray, self).__init__(args, is_cropped = is_cropped, root = root, dstype = 'clean', replicates = replicates, grayscale=True)
 
 class MpiSintelFinal(MpiSintel):
     def __init__(self, args, is_cropped = False, root = '', replicates = 1):
