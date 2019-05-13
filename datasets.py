@@ -84,12 +84,12 @@ class MpiSintel(data.Dataset):
 
         flow = frame_utils.read_gen(self.flow_list[index])
 
+        if self.grayscale:
+            img1,img2= rgb2gray(img1),rgb2gray(img2)
+            print('converted to grayscale')
+
         images = [img1, img2]
         image_size = img1.shape[:2]
-
-        if self.grayscale:
-            images = [rgb2gray(image) for image in images]
-            print('converted to grayscale')
 
         if self.is_cropped:
             cropper = StaticRandomCrop(image_size, self.crop_size)
