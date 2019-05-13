@@ -8,6 +8,7 @@ def read_gen(file_name,as_grayscale=False):
     ext = splitext(file_name)[-1]
     if ext == '.png' or ext == '.jpeg' or ext == '.ppm' or ext == '.jpg':
         if as_grayscale:
+            print('converted to grayscale')
             im = io.imread(file_name,as_grayscale=True)
         else:
             im = imread(file_name)
