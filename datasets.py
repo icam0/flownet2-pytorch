@@ -79,14 +79,14 @@ class MpiSintel(data.Dataset):
 
         index = index % self.size
 
-        img1 = frame_utils.read_gen(self.image_list[index][0])
-        img2 = frame_utils.read_gen(self.image_list[index][1])
+        if self.grayscale:
+            img1 = frame_utils.read_gen(self.image_list[index][0], as_grayscale=True)
+            img2 = frame_utils.read_gen(self.image_list[index][1], as_grayscale=True)
+        else:
+            img1 = frame_utils.read_gen(self.image_list[index][0])
+            img2 = frame_utils.read_gen(self.image_list[index][1])
 
         flow = frame_utils.read_gen(self.flow_list[index])
-
-        if self.grayscale:
-            img1,img2= rgb2gray(img1),rgb2gray(img2)
-            print('converted to grayscale')
 
         images = [img1, img2]
         image_size = img1.shape[:2]
