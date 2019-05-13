@@ -9,6 +9,7 @@ from glob import glob
 import utils.frame_utils as frame_utils
 
 from scipy.misc import imread, imresize
+from skimage.color import rgb2gray
 
 class StaticRandomCrop(object):
     def __init__(self, image_size, crop_size):
@@ -28,12 +29,13 @@ class StaticCenterCrop(object):
         return img[(self.h-self.th)//2:(self.h+self.th)//2, (self.w-self.tw)//2:(self.w+self.tw)//2,:]
 
 class MpiSintel(data.Dataset):
-    def __init__(self, args, is_cropped = False, root = '', dstype = 'clean', replicates = 1):
+    def __init__(self, args, is_cropped = False, root = '', dstype = 'clean', replicates = 1, grayscale=False):
         self.args = args
         self.is_cropped = is_cropped
         self.crop_size = args.crop_size
         self.render_size = args.inference_size
         self.replicates = replicates
+        self.grayscale = grayscale
 
         flow_root = join(root, 'flow')
         image_root = join(root, dstype)
@@ -85,6 +87,10 @@ class MpiSintel(data.Dataset):
         images = [img1, img2]
         image_size = img1.shape[:2]
 
+        if self.grayscale:
+            images = [rgb2gray(image) for image in images]
+            print('converted to grayscale')
+
         if self.is_cropped:
             cropper = StaticRandomCrop(image_size, self.crop_size)
         else:
@@ -106,6 +112,10 @@ class MpiSintel(data.Dataset):
 class MpiSintelClean(MpiSintel):
     def __init__(self, args, is_cropped = False, root = '', replicates = 1):
         super(MpiSintelClean, self).__init__(args, is_cropped = is_cropped, root = root, dstype = 'clean', replicates = replicates)
+
+class MpiSintelCleanGray(MpiSintel):
+    def __init__(self, args, is_cropped = False, root = '', replicates = 1):
+        super(MpiSintelClean, self).__init__(args, is_cropped = is_cropped, root = root, dstype = 'clean', replicates = replicates, grayscale=True)
 
 class MpiSintelFinal(MpiSintel):
     def __init__(self, args, is_cropped = False, root = '', replicates = 1):
