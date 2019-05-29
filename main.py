@@ -16,8 +16,8 @@ from os.path import *
 import models, losses, datasets
 from utils import flow_utils, tools
 
-import mmcv
-from skimage import io
+# import mmcv
+# from skimage import io
 
 # fp32 copy of parameters for update
 global param_copy
@@ -384,8 +384,8 @@ if __name__ == '__main__':
                     _pflow = output[i].data.cpu().numpy().transpose(1, 2, 0)
                     filename = join(flow_folder, '%06d.flo'%(batch_idx * args.inference_batch_size + i))
                     flow_utils.writeFlow( filename , _pflow)
-                    flow = mmcv.flow2rgb(mmcv.flowread(filename))
-                    io.imsave(filename[0:-3]+'png', flow)
+                    # flow = mmcv.flow2rgb(mmcv.flowread(filename))
+                    # io.imsave(filename[0:-3]+'png', flow)
 
             progress.set_description('Inference Averages for Epoch {}: '.format(epoch) + tools.format_dictionary_of_losses(loss_labels, np.array(statistics).mean(axis=0)))
             progress.update(1)
