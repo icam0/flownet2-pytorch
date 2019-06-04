@@ -342,7 +342,7 @@ if __name__ == '__main__':
 
     # Reusable function for inference
     def inference(args, epoch, data_loader, model, offset=0):
-
+        print('started inference')
         model.eval()
         
         if args.save_flow or args.render_validation:
@@ -383,6 +383,7 @@ if __name__ == '__main__':
                 for i in range(args.inference_batch_size):
                     _pflow = output[i].data.cpu().numpy().transpose(1, 2, 0)
                     filename = join(flow_folder, '%06d.flo'%(batch_idx * args.inference_batch_size + i))
+                    print('main inside arg_flow')
                     flow_utils.writeFlow( filename , _pflow)
                     # flow = mmcv.flow2rgb(mmcv.flowread(filename))
                     # io.imsave(filename[0:-3]+'png', flow)
