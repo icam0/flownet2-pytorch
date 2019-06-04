@@ -358,8 +358,11 @@ if __name__ == '__main__':
 
         statistics = []
         total_loss = 0
+        print('before tqdm loop')
         for batch_idx, (data, target) in enumerate(progress):
+            print('start tqdm loop')
             if args.cuda:
+                print('with cuda')
                 data, target = [d.cuda(non_blocking=True) for d in data], [t.cuda(non_blocking=True) for t in target]
             data, target = [Variable(d) for d in data], [Variable(t) for t in target]
 
