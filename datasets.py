@@ -336,7 +336,7 @@ class ImagesFromFolder(data.Dataset):
     self.replicates = replicates
 
     images = sorted( glob( join(root, '*.' + iext) ) )
-    print('number of images', self.size)
+
     print('images',images)
     print('len images -1',len(images)-1)
     self.image_list = []
@@ -344,10 +344,10 @@ class ImagesFromFolder(data.Dataset):
         im1 = images[i]
         im2 = images[i+1]
         self.image_list += [ [ im1, im2 ] ]
-    
+
     self.size = len(self.image_list)
 
-
+    print('number of images', len(self.image_list))
 
     self.frame_size = frame_utils.read_gen(self.image_list[0][0]).shape
 
