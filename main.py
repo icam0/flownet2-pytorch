@@ -354,8 +354,8 @@ if __name__ == '__main__':
         args.inference_n_batches = np.inf if args.inference_n_batches < 0 else args.inference_n_batches
         print('data loader info')
         print(data_loader)
-        print(data_loader.size)
-        print(data_loader.image_list)
+        print(data_loader.dataset.size)
+        print(data_loader.dataset.image_list)
 
         progress = tqdm(data_loader, ncols=100, total=np.minimum(len(data_loader), args.inference_n_batches), desc='Inferencing ', 
             leave=True, position=offset)
