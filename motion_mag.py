@@ -5,25 +5,28 @@ from PIL import Image,ImageDraw
 from skimage import io
 import os
 
-def save_img_pair(im1,im2,flow,mag):
+def save_img_pair(im1,im2,flow,mag,testset_name):
     mag = int(mag)
     flow_viz = mmcv.flow2rgb(flow)
 
     #make directories
-    os.mkdir('./temp/motion_mag/clean/s_%i/'%(mag))
-    os.mkdir('./temp/motion_mag/flow/s_%i/'%(mag))
-    os.mkdir('./temp/motion_mag/flow_viz/s_%i/'%(mag))
+    os.mkdir('./temp/%s/clean/s_%03i/'%(testset_name,mag))
+    os.mkdir('./temp/%s/flow/s_%03i/'%(testset_name,mag))
+    os.mkdir('./temp/%s/flow_viz/s_%03i/'%(testset_name,mag))
 
     #save image pair, gt and gt_viz
-    im1.save('./temp/motion_mag/clean/s_%i/frame_0001.png' %(mag))
-    im2.save('./temp/motion_mag/clean/s_%i/frame_0002.png'%(mag))
-    mmcv.flowwrite(flow, './temp/motion_mag/flow/s_%i/frame_0001.flo'%(mag))
-    io.imsave('./temp/motion_mag/flow_viz/s_%i/flow_viz.png' %(mag), flow_viz)
+    im1.save('./temp/%s/clean/s_%03i/frame_0001.png' %(testset_name,mag))
+    im2.save('./temp/%s/clean/s_%03i/frame_0002.png'%(testset_name,mag))
+    mmcv.flowwrite(flow, './temp/%s/flow/s_%03i/frame_0001.flo'%(testset_name,mag))
+    io.imsave('./temp/%s/flow_viz/s_%03i/flow_viz.png' %(testset_name,mag), flow_viz)
 
-def generate_img_pair(widt,height,square_size,sx,sy,color):
-
-    im1 = Image.new('RGB', (width, height), color='white')
-    im2 = Image.new('RGB', (width, height), color='white')
+def generate_img_pair(widt,height,square_size,sx,sy,color,bg=None):
+    if bg:
+        im1 = bg.copy()
+        im2 = bg.copy()
+    else:
+        im1 = Image.new('RGB', (width, height), color='white')
+        im2 = Image.new('RGB', (width, height), color='white')
 
     d1 = ImageDraw.Draw(im1)
     d2 = ImageDraw.Draw(im2)
@@ -56,8 +59,9 @@ sx_range = np.arange(10,450,40).tolist()
 sx_range = [2] + sx_range + [width-square_size]
 sy = 0.
 color='black'
-
+bg = Image.open("./temp/bg.png")
+testset_name = 'motion_mag_bg'
 for sx in sx_range:
-    im1,im2,flow = generate_img_pair(width,height,square_size,sx,sy,color)
+    im1,im2,flow = generate_img_pair(width,height,square_size,sx,sy,color,bg)
     mag = (sx**2 + sy**2)**0.5
-    save_img_pair(im1,im2,flow,mag)
+    save_img_pair(im1,im2,flow,mag,testset_name)

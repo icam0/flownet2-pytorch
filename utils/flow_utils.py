@@ -53,5 +53,3 @@ def writeFlow(filename,uv,v=None):
     tmp[:,np.arange(width)*2 + 1] = v
     tmp.astype(np.float32).tofile(f)
     f.close()
-    print('written flow')
-    print(tmp)

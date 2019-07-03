@@ -395,6 +395,7 @@ if __name__ == '__main__':
             loss_labels = list(model.module.loss.loss_labels)
 
             statistics.append(loss_values)
+            print(statistics)
             # import IPython; IPython.embed()
             if args.save_flow or args.render_validation:
                 for i in range(args.inference_batch_size):
