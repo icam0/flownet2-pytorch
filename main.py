@@ -16,8 +16,7 @@ from os.path import *
 import models, losses, datasets
 from utils import flow_utils, tools
 
-# import mmcv
-# from skimage import io
+import pickle
 
 # fp32 copy of parameters for update
 global param_copy
@@ -342,7 +341,6 @@ if __name__ == '__main__':
 
     # Reusable function for inference
     def inference(args, epoch, data_loader, model, offset=0):
-        print('started inference')
         model.eval()
         
         if args.save_flow or args.render_validation:
@@ -395,7 +393,6 @@ if __name__ == '__main__':
             loss_labels = list(model.module.loss.loss_labels)
 
             statistics.append(loss_values)
-            print(statistics)
             # import IPython; IPython.embed()
             if args.save_flow or args.render_validation:
                 for i in range(args.inference_batch_size):
@@ -413,6 +410,9 @@ if __name__ == '__main__':
                 break
 
         progress.close()
+
+        with open(flow_folder+'inference_statistics.pickle','wb') as handle:
+            pickle.dump(statistics,handle, protocol=pickle.HIGHEST_PROTOCOL)
 
         return
 
