@@ -352,31 +352,31 @@ if __name__ == '__main__':
 
         
         args.inference_n_batches = np.inf if args.inference_n_batches < 0 else args.inference_n_batches
-        print('data loader info')
-        print(data_loader)
-        print(data_loader.dataset.size)
-        print(data_loader.dataset.image_list)
+        # print('data loader info')
+        # print(data_loader)
+        # print(data_loader.dataset.size)
+        # print(data_loader.dataset.image_list)
 
         progress = tqdm(data_loader, ncols=100, total=np.minimum(len(data_loader), args.inference_n_batches), desc='Inferencing ', 
             leave=True, position=offset)
 
         statistics = []
         total_loss = 0
-        print('before tqdm loop')
-        print(progress)
-        print(len(progress))
+        #print('before tqdm loop')
+        #print(progress)
+        #print(len(progress))
+
+        #for batch_idx, (data, target) in enumerate(progress):
+            #print('test loop runs')
+            #print(batch_idx)
+            #print(data)
+            #print(target)
+
 
         for batch_idx, (data, target) in enumerate(progress):
-            print('test loop runs')
-            print(batch_idx)
-            print(data)
-            print(target)
-
-
-        for batch_idx, (data, target) in enumerate(progress):
-            print('start tqdm loop')
+            #print('start tqdm loop')
             if args.cuda:
-                print('with cuda')
+            #    print('with cuda')
                 data, target = [d.cuda(non_blocking=True) for d in data], [t.cuda(non_blocking=True) for t in target]
             data, target = [Variable(d) for d in data], [Variable(t) for t in target]
 
@@ -400,7 +400,7 @@ if __name__ == '__main__':
                 for i in range(args.inference_batch_size):
                     _pflow = output[i].data.cpu().numpy().transpose(1, 2, 0)
                     filename = join(flow_folder, '%06d.flo'%(batch_idx * args.inference_batch_size + i))
-                    print('main inside arg_flow')
+                    #print('main inside arg_flow')
                     flow_utils.writeFlow( filename , _pflow)
                     # flow = mmcv.flow2rgb(mmcv.flowread(filename))
                     # io.imsave(filename[0:-3]+'png', flow)
