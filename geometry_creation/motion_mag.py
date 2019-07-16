@@ -17,10 +17,14 @@ def save_img_pair(im1,im2,flow,mag,testset_name):
     #save image pair, gt and gt_viz
     im1.save('./temp/%s/clean/s_%03i/frame_0001.png' %(testset_name,mag))
     im2.save('./temp/%s/clean/s_%03i/frame_0002.png'%(testset_name,mag))
+
+    # im1.save('./temp/%s/clean/s_%03i/frame_0001.ppm' %(testset_name,mag))
+    # im2.save('./temp/%s/clean/s_%03i/frame_0002.ppm'%(testset_name,mag))
+
     mmcv.flowwrite(flow, './temp/%s/flow/s_%03i/frame_0001.flo'%(testset_name,mag))
     io.imsave('./temp/%s/flow_viz/s_%03i/flow_viz.png' %(testset_name,mag), flow_viz)
 
-def generate_img_pair(widt,height,square_size,sx,sy,color,bg=None,occlusion=None,angle=None):
+def generate_img_pair(widt,height,square_size,sx,sy,color,bg=None,occlusion=None,angle=None,correspondence=False,color_2='black'):
     if bg:
         im1 = bg.copy()
         im2 = bg.copy()
@@ -47,9 +51,19 @@ def generate_img_pair(widt,height,square_size,sx,sy,color,bg=None,occlusion=None
         d1.rectangle([(x0, y0), (x1, y1)],fill=color)
         d2.rectangle([(x0+sx, y0+sy), (x1+sx, y1+sy)],fill=color)
 
+    elif correspondence:
+        d1.rectangle([(x0-0.5*sx, y0-0.5*sy), (x1-0.5*sx, y1-0.5*sy)],fill=color)
+        d1.rectangle([(x0 + .5 * sx, y0 + 0.5 * sy), (x1 + 0.5 * sx, y1 + 0.5 * sy)], fill=color_2)
+
+        d2.rectangle([(x0+0.5*sx, y0-0.5*sy), (x1+0.5*sx, y1-0.5*sy)],fill=color)
+        d2.rectangle([(x0 - .5 * sx, y0 + 0.5 * sy), (x1 - 0.5 * sx, y1 + 0.5 * sy)], fill=color_2)
+
+
     else:
         d1.rectangle([(x0-0.5*sx, y0-0.5*sy), (x1-0.5*sx, y1-0.5*sy)],fill=color)
         d2.rectangle([(x0+.5*sx, y0+0.5*sy), (x1+0.5*sx, y1+0.5*sy)],fill=color)
+
+
 
     # if occlusion or occlusion != 0:
     #     occlusion_diff = (square_size-occlusion)/2
@@ -66,14 +80,14 @@ def generate_img_pair(widt,height,square_size,sx,sy,color,bg=None,occlusion=None
 
     #generate ground truth
     flow = np.zeros((height,width,2))
-    flow[im1_np[:,:,0] == color_index,0] = sx
-    flow[im1_np[:,:,0] == color_index,1] = sy
+    # flow[im1_np[:,:,0] == color_index,0] = sx
+    # flow[im1_np[:,:,0] == color_index,1] = sy
 
     return im1,im2,flow
 
 width = 512
 height = 384
-square_size = 64
+square_size = 32
 color='black'
 #sx = 200. #make sure this is dividable by 2
 
@@ -86,15 +100,17 @@ sx_range = np.arange(2,220,2) #second sx_range
 # s_range = [2] + s_range +[height-square_size]
 # sy = 0.
 #square_size_range = np.arange(8,334,8).tolist() + [334]
+#angle_range = np.arange(0,360,5)
 # sx = 50
-sy = 0
+sx,sy = 64,64
 
 bg = Image.open("./temp/bg.png")
 #occlusion_range = np.arange(0,68,4)
-#angle_range = np.arange(0,360,5)
-testset_name = 'motion_mag_bg2'
+testset_name = 'correspondence_bg'
 occlusion = None
-for sx in sx_range:
-    im1,im2,flow = generate_img_pair(width,height,square_size,sx,sy,color,bg=bg,occlusion=None)
-    #mag = (sx**2 + sy**2)**0.5
-    save_img_pair(im1,im2,flow,sx,testset_name)
+color_pairs = [('black','black'),('black','white'),('blue','red'),((200,0,0),(180,0,0))]
+
+for i,color_pair in enumerate(color_pairs):
+    im1,im2,flow = generate_img_pair(width,height,square_size,sx,sy,color=color_pair[0],bg=bg,occlusion=None,correspondence=True,color_2=color_pair[1])
+
+    save_img_pair(im1,im2,flow,i,testset_name)

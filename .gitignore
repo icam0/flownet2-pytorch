@@ -20,3 +20,7 @@ networks/channelnorm_package/channelnorm_cuda\.egg-info/
 networks/correlation_package/correlation_cuda\.egg-info/
 
 networks/resample2d_package/resample2d_cuda\.egg-info/
+
+geometry/
+
+checkpoints/
