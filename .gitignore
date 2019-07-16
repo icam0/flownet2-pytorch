@@ -13,8 +13,6 @@ _ext/
 
 models/
 
-temp/
-
 networks/channelnorm_package/channelnorm_cuda\.egg-info/
 
 networks/correlation_package/correlation_cuda\.egg-info/
