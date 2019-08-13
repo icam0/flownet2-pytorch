@@ -366,12 +366,13 @@ if __name__ == '__main__':
         #print(progress)
         #print(len(progress))
 
-        for batch_idx, (data, target) in enumerate(progress):
+        for batch_idx, (data, target) in data_loader:
             print('test loop runs')
             print(batch_idx)
-            print(data)
-            print(target)
-
+            print(data.shape)
+            print(target.shape)
+        print('load data loader attributes')
+        print(data_loader.__dict__)
 
         for batch_idx, (data, target) in enumerate(progress):
             #print('start tqdm loop')
