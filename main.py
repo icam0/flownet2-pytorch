@@ -366,20 +366,26 @@ if __name__ == '__main__':
         #print(progress)
         #print(len(progress))
 
-        for batch_idx, (data, target) in enumerate(data_loader):
-            print('test loop runs')
-            print(batch_idx)
-            print(data.shape)
-            print(target.shape)
-        print('load data loader attributes')
+        # for batch_idx, (data, target) in enumerate(data_loader):
+        #     print('test loop runs')
+        #     print(batch_idx)
+        #     print(data.shape)
+        #     print(target.shape)
+        # print('load data loader attributes')
+        print('dataloader attributes')
         print(data_loader.__dict__)
 
         for batch_idx, (data, target) in enumerate(progress):
-            #print('start tqdm loop')
+            print('start tqdm loop')
+            print(type(target))
+            print(type(data))
             if args.cuda:
-            #    print('with cuda')
                 data, target = [d.cuda(non_blocking=True) for d in data], [t.cuda(non_blocking=True) for t in target]
             data, target = [Variable(d) for d in data], [Variable(t) for t in target]
+            print('after cuda stuff')
+            print(type(target))
+            print(type(data))
+
 
             # when ground-truth flows are not available for inference_dataset, 
             # the targets are set to all zeros. thus, losses are actually L1 or L2 norms of compute optical flows, 
