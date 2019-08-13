@@ -366,7 +366,7 @@ if __name__ == '__main__':
         #print(progress)
         #print(len(progress))
 
-        for batch_idx, (data, target) in data_loader:
+        for batch_idx, (data, target) in enumerate(data_loader):
             print('test loop runs')
             print(batch_idx)
             print(data.shape)
