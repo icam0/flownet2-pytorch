@@ -366,11 +366,11 @@ if __name__ == '__main__':
         #print(progress)
         #print(len(progress))
 
-        #for batch_idx, (data, target) in enumerate(progress):
-            #print('test loop runs')
-            #print(batch_idx)
-            #print(data)
-            #print(target)
+        for batch_idx, (data, target) in enumerate(progress):
+            print('test loop runs')
+            print(batch_idx)
+            print(data)
+            print(target)
 
 
         for batch_idx, (data, target) in enumerate(progress):
