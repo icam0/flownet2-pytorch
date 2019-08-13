@@ -59,11 +59,13 @@ class MpiSintel(data.Dataset):
             img1 = join(image_root, fprefix + "%04d"%(fnum+0) + '.png')
             img2 = join(image_root, fprefix + "%04d"%(fnum+1) + '.png')
 
+            print(img1,img2)
             if not isfile(img1) or not isfile(img2) or not isfile(file):
                 continue
 
             self.image_list += [[img1, img2]]
             self.flow_list += [file]
+        print(self.image_list)
 
         self.size = len(self.image_list)
 
