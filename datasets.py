@@ -68,7 +68,7 @@ class MpiSintel(data.Dataset):
         print(self.image_list)
 
         self.size = len(self.image_list)
-
+        print(self.size)
         self.frame_size = frame_utils.read_gen(self.image_list[0][0]).shape
 
         if (self.render_size[0] < 0) or (self.render_size[1] < 0) or (self.frame_size[0]%64) or (self.frame_size[1]%64):
