@@ -451,8 +451,8 @@ if __name__ == '__main__':
         print(type(model_and_loss.__str__()))
         print(model_and_loss.__str__())
 
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        model = model_and_loss().model.to(device)
+        #device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        #model = model_and_loss().model.to(device)
         print(torchsummary.summary(model_and_loss.model,(6,384,512)))
     else:
         for epoch in progress:
