@@ -446,10 +446,13 @@ if __name__ == '__main__':
     global_iteration = 0
 
     if args.summary:
-        print(model_and_loss)
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        model = model_and_loss().to(device)
-        print(torchsummary.summary(model,(6,512,384)))
+        # print(model_and_loss)
+
+        print(type(model_and_loss.__str__()))
+        print(model_and_loss.__str__())
+        # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        # model = model_and_loss().to(device)
+        # print(torchsummary.summary(model,(6,512,384)))
     else:
         for epoch in progress:
             if args.inference or (args.render_validation and ((epoch - 1) % args.validation_frequency) == 0):
