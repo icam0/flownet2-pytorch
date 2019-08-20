@@ -447,7 +447,9 @@ if __name__ == '__main__':
 
     if args.summary:
         print(model_and_loss)
-        print(torchsummary.summary(model_and_loss,(6,512,384)))
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        model = model_and_loss().to(device)
+        print(torchsummary.summary(model,(6,512,384)))
     else:
         for epoch in progress:
             if args.inference or (args.render_validation and ((epoch - 1) % args.validation_frequency) == 0):
