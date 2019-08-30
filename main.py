@@ -433,8 +433,8 @@ if __name__ == '__main__':
 
         progress.close()
 
-        with open(flow_folder+'/losses.pickle','wb') as handle:
-            pickle.dump(statistics,handle, protocol=pickle.HIGHEST_PROTOCOL)
+        # with open(flow_folder+'/losses.pickle','wb') as handle:
+        #     pickle.dump(statistics,handle, protocol=pickle.HIGHEST_PROTOCOL)
 
         return
 
