@@ -114,7 +114,7 @@ if __name__ == '__main__':
         args.inference_dataset_class = tools.module_to_dict(datasets)[args.inference_dataset]
 
         args.cuda = not args.no_cuda and torch.cuda.is_available()
-        args.current_hash = subprocess.check_output(["git", "rev-parse", "HEAD"]).rstrip()
+        # args.current_hash = subprocess.check_output(["git", "rev-parse", "HEAD"]).rstrip()
         args.log_file = join(args.save, 'args.txt')
 
         # dict to collect activation gradients (for training debug purpose)
@@ -126,8 +126,8 @@ if __name__ == '__main__':
             args.total_epochs = 1
             args.inference_dir = "{}/inference".format(args.save)
 
-    print('Source Code')
-    print(('  Current Git Hash: {}\n'.format(args.current_hash)))
+    # print('Source Code')
+    # print(('  Current Git Hash: {}\n'.format(args.current_hash)))
 
     # Change the title for `top` and `pkill` commands
     setproctitle.setproctitle(args.save)
@@ -391,6 +391,9 @@ if __name__ == '__main__':
             if args.cuda:
                 data, target = [d.cuda(non_blocking=True) for d in data], [t.cuda(non_blocking=True) for t in target]
             data, target = [Variable(d) for d in data], [Variable(t) for t in target]
+
+            print('data',data.shape)
+            print('target',target.shape)
             # print('after cuda stuff')
             # print(type(target[0]))
             # print(len(target))
