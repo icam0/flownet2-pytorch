@@ -392,8 +392,8 @@ if __name__ == '__main__':
                 data, target = [d.cuda(non_blocking=True) for d in data], [t.cuda(non_blocking=True) for t in target]
             data, target = [Variable(d) for d in data], [Variable(t) for t in target]
 
-            print('data',data.shape)
-            print('target',target.shape)
+            print('data',data[0].shape)
+            print('target',target[0].shape)
             # print('after cuda stuff')
             # print(type(target[0]))
             # print(len(target))
