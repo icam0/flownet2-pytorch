@@ -55,6 +55,7 @@ class FlowNetS(nn.Module):
                     init.uniform_(m.bias)
                 init.xavier_uniform_(m.weight)
                 # init_deconv_bilinear(m.weight)
+
         self.upsample1 = nn.Upsample(scale_factor=4, mode='bilinear')
 
     def forward(self, x):

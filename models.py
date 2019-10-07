@@ -259,11 +259,16 @@ class FlowNet2S(FlowNetS.FlowNetS):
         self.div_flow = div_flow
         
     def forward(self, inputs):
-        rgb_mean = inputs.contiguous().view(inputs.size()[:2]+(-1,)).mean(dim=-1).view(inputs.size()[:2] + (1,1,1,))
-        x = (inputs - rgb_mean) / self.rgb_max
-        x = torch.cat( (x[:,:,0,:,:], x[:,:,1,:,:]), dim = 1)
 
-        out_conv1 = self.conv1(x)
+        # if norm:
+        #     rgb_mean = inputs.contiguous().view(inputs.size()[:2] + (-1,)).mean(dim=-1).view(
+        #         inputs.size()[:2] + (1, 1, 1,))
+        #     x = (inputs.requires_grad_() - rgb_mean) / self.rgb_max
+        #     x = torch.cat((x[:, :, 0, :, :], x[:, :, 1, :, :]), dim=1).requires_grad_()
+        #     out_conv1 = self.conv1(x)
+        # else:
+
+        out_conv1 = self.conv1(inputs)
 
         out_conv2 = self.conv2(out_conv1)
         out_conv3 = self.conv3_1(self.conv3(out_conv2))

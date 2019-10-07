@@ -29,13 +29,13 @@ class StaticCenterCrop(object):
         return img[(self.h-self.th)//2:(self.h+self.th)//2, (self.w-self.tw)//2:(self.w+self.tw)//2,:]
 
 class MpiSintel(data.Dataset):
-    def __init__(self, args, is_cropped = False, root = '', dstype = 'clean', replicates = 1, grayscale=False):
+    def __init__(self, args, is_cropped = False, root = '', dstype = 'clean', replicates = 1,norm_og=False):
         self.args = args
         self.is_cropped = is_cropped
         self.crop_size = args.crop_size
         self.render_size = args.inference_size
         self.replicates = replicates
-        self.grayscale = grayscale
+        self.norm_og = norm_og
 
         flow_root = join(root, 'flow')
         image_root = join(root, dstype)
@@ -83,16 +83,18 @@ class MpiSintel(data.Dataset):
 
         index = index % self.size
 
-        if self.grayscale:
-            img1 = frame_utils.read_gen(self.image_list[index][0], as_grayscale=True)
-            img2 = frame_utils.read_gen(self.image_list[index][1], as_grayscale=True)
-        else:
-            img1 = frame_utils.read_gen(self.image_list[index][0])
-            img2 = frame_utils.read_gen(self.image_list[index][1])
+        img1 = frame_utils.read_gen(self.image_list[index][0])
+        img2 = frame_utils.read_gen(self.image_list[index][1])
 
         flow = frame_utils.read_gen(self.flow_list[index])
 
-        images = [img1, img2]
+        if self.norm_og:
+            img1_mean = np.array((0.45014125, 0.4320596, 0.4114511))
+            img2_mean = np.array((0.44855332, 0.43102142, 0.41060242))
+            img1_norm = (img1 / 255.) - img1_mean
+            img2_norm = (img2 / 255.) - img2_mean
+
+        images = [img1_norm, img2_norm]
         image_size = img1.shape[:2]
 
         if self.is_cropped:
@@ -106,12 +108,8 @@ class MpiSintel(data.Dataset):
         images = np.array(images).transpose(3,0,1,2)
         flow = flow.transpose(2,0,1)
 
-        print('images before T',images.shape)
-        print('flow before T', flow.shape)
         images = torch.from_numpy(images.astype(np.float32))
         flow = torch.from_numpy(flow.astype(np.float32))
-        print('images after T',images.shape)
-        print('flow after T', flow.shape)
 
         return [images], [flow]
 
@@ -119,12 +117,8 @@ class MpiSintel(data.Dataset):
         return self.size * self.replicates
 
 class MpiSintelClean(MpiSintel):
-    def __init__(self, args, is_cropped = False, root = '', replicates = 1):
-        super(MpiSintelClean, self).__init__(args, is_cropped = is_cropped, root = root, dstype = 'clean', replicates = replicates)
-
-class MpiSintelCleanGray(MpiSintel):
-    def __init__(self, args, is_cropped = False, root = '', replicates = 1):
-        super(MpiSintelCleanGray, self).__init__(args, is_cropped = is_cropped, root = root, dstype = 'clean', replicates = replicates, grayscale=True)
+    def __init__(self, args, is_cropped = False, root = '', replicates = 1,norm_og=False):
+        super(MpiSintelClean, self).__init__(args, is_cropped = is_cropped, root = root, dstype = 'clean', replicates = replicates,norm_og=norm_og)
 
 class MpiSintelFinal(MpiSintel):
     def __init__(self, args, is_cropped = False, root = '', replicates = 1):

@@ -4,14 +4,10 @@ from scipy.misc import imread
 # from skimage import io
 from . import flow_utils 
 
-def read_gen(file_name,as_grayscale=False):
+def read_gen(file_name):
     ext = splitext(file_name)[-1]
     if ext == '.png' or ext == '.jpeg' or ext == '.ppm' or ext == '.jpg':
-        if as_grayscale:
-            print('converted to grayscale')
-            im = imread(file_name,as_grayscale=True)
-        else:
-            im = imread(file_name)
+        im = imread(file_name)
         if im.shape[2] > 3:
             return im[:,:,:3]
         else:
