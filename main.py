@@ -354,39 +354,15 @@ if __name__ == '__main__':
             if not os.path.exists(flow_folder):
                 os.makedirs(flow_folder)
 
-        
         args.inference_n_batches = np.inf if args.inference_n_batches < 0 else args.inference_n_batches
-        # print('data loader info')
-        # print(data_loader)
-        # print(data_loader.dataset.size)
-        # print(data_loader.dataset.image_list)
 
         progress = tqdm(data_loader, ncols=100, total=np.minimum(len(data_loader), args.inference_n_batches), desc='Inferencing ', 
             leave=True, position=offset)
 
         statistics = []
         total_loss = 0
-        #print('before tqdm loop')
-        #print(progress)
-        #print(len(progress))
-
-        # for batch_idx, (data, target) in enumerate(data_loader):
-        #     print('test loop runs')
-        #     print(batch_idx)
-        #     print(data.shape)
-        #     print(target.shape)
-        # print('load data loader attributes')
-        # print('dataloader attributes')
-        # print(data_loader.__dict__)
 
         for batch_idx, (data, target) in enumerate(progress):
-        #     print('start tqdm loop')
-        #     print(type(target[0]))
-        #     print(len(target))
-        #     print(type(data[0]))
-        #     print(len(data))
-        #     print(target[0])
-        #     print(data[0])
 
             if args.cuda:
                 data, target = [d.cuda(non_blocking=True) for d in data], [t.cuda(non_blocking=True) for t in target]
@@ -394,14 +370,6 @@ if __name__ == '__main__':
 
             print('data',data[0].shape)
             print('target',target[0].shape)
-            # print('after cuda stuff')
-            # print(type(target[0]))
-            # print(len(target))
-            # print(type(data[0]))
-            # print(len(data))
-            # print(target[0])
-            # print(data[0])
-
 
             # when ground-truth flows are not available for inference_dataset, 
             # the targets are set to all zeros. thus, losses are actually L1 or L2 norms of compute optical flows, 
