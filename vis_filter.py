@@ -15,6 +15,7 @@ from viz_toolkit.layer_activation_with_guided_backprop import GuidedBackprop
 from viz_toolkit.cnn_layer_visualization import CNNLayerVisualization
 from viz_toolkit import misc_functions
 import warnings
+import seaborn as sns
 
 warnings.filterwarnings("ignore")
 
@@ -72,65 +73,44 @@ filters_nr = [64,128,256,256,512,512,512,512,1024,1024,1024]
 recep_field = [7, 15, 31, 47, 63, 95, 127, 191, 255, 383,511]
 stride_power = [1,2,3,3,4,4,5,5,6,6,6]
 layer_names = ['conv1','conv2','conv3','conv3_1','conv4','conv4_1','conv5','conv5_1','conv6','conv6_1','predict_flow6']
-cnn_layer_idx = 3
-filters = [0,87,93,130,157,181,227,239]
+cnn_layer_idx = 5 #always pick the relu one
+layer_name = layer_names[cnn_layer_idx]
+#filters = [0,87,93,130,157,181,227,239]
+filters = [39,122,123,186,189,222,223,253]
+inp_height = 31
+inp_width = 31
 
-fig,axes = plt.subplots(3,len(filters),figsize=(12.,8.))
+fig,axes = plt.subplots(2,len(filters),figsize=(12.,8.))
 recep_field_size = recep_field[cnn_layer_idx]
 
-for i,filter_pos in enumerate(filters):
-    layer_vis = CNNLayerVisualization(layers_flat, cnn_layer, filter_pos,20,20, int(20+5*cnn_layer//2) ,upscaling_steps=upscaling_steps, blur=blur)
+for i,filter in enumerate(filters):
+    layer_vis = CNNLayerVisualization(layers_flat,cnn_layer_idx, filter,inp_height,inp_width,color=False,num_iter=20)
     # Layer visualization with pytorch hooks
     [img0,img1] = layer_vis.visualise_layer_with_hooks()
+    if filter == 123:
+        fig1,ax1 = plt.subplots(1,1)
+        sns.distplot(img0.flatten(),ax=ax1,label='img0')
+        sns.distplot(img1.flatten(), ax=ax1, label='img1')
+        ax1.legend()
+        fig1.show()
     axes[0,i].imshow(img0,cmap='gray')
     axes[1,i].imshow(img1,cmap='gray')
-#
-# axes[0,0].set_ylabel('im0',rotation=0.,labelpad=20)
-# axes[1,0].set_ylabel('im1',rotation=0.,labelpad=20)
-# axes[2,0].set_ylabel('im0-im1',rotation=0.,labelpad=30)
-#
-# for i, ax in enumerate(axes.flatten()):
-#     ax.set_xticks([])
-#     ax.set_yticks([])
-#
-# fig.suptitle('Layer %i, upscaling steps=%i, blur=%i, filter_sjze=%i,recep_size=%i' %(cnn_layer,upscaling_steps,blur,img1.shape[0],recep_field_size))
-# save= True
+    axes[0,i].set_title('Filter %i'%(filter))
+
+axes[0,0].set_ylabel('im0',rotation=0.,labelpad=20)
+axes[1,0].set_ylabel('im1',rotation=0.,labelpad=20)
+fig.suptitle('Layer %s'%(layer_names[cnn_layer_idx//2]))
+
+for i, ax in enumerate(axes.flatten()):
+    ax.set_xticks([])
+    ax.set_yticks([])
+
+#fig.suptitle('Layer %i, upscaling steps=%i, blur=%i, filter_sjze=%i,recep_size=%i' %(cnn_layer,upscaling_steps,blur,img1.shape[0],recep_field_size))
+# save= False
 # if save:
 #     fig.savefig('./plots/layer%i-actviz.pdf'%(cnn_layer))
-# plt.show()
-
-im0 = imread('./input_images/frame_0001.png').astype(np.float32)
-im1 = imread('./input_images/frame_0002.png').astype(np.float32)
-scale = 2
-im0 = rescale(im0,scale)
-im1 = rescale(im1,scale)
-
-im0_mean = np.array((0.45014125, 0.4320596, 0.4114511))
-im1_mean = np.array((0.44855332, 0.43102142,0.41060242))
-
-# switch between these 2
-im0_norm = (im0/255.)-im0_mean
-im1_norm = (im1/255.)-im1_mean
-
-images = np.concatenate((im0_norm,im1_norm),axis=2).transpose(2,0,1).reshape(1,6,384*2*scale,512*2*scale)
-
-# images = np.array((im0, im1)).transpose(3,0,1,2).reshape(1, 3, 2, 384, 512)
-
-images = torch.from_numpy(images.astype(np.float32)).cuda()
-# x = images
-# for i,layer in enumerate(all_layers):
-#     x = layer(x)
-#     if i in [1,5,9,13,19]:
-#         plt.plot(np.arange(x.shape[1]),np.mean(x.data.cpu().numpy()[0,:,:,:],axis=(1,2)))
-#         plt.title('activation layer %i' %(i))
-#         plt.show()
-
-with torch.no_grad():
-    output = model_and_loss.model(images)
-    # output = model_and_loss.model(images.view(1,3,2,384,512))
-flow = output[0].data.cpu().numpy().transpose(1, 2, 0)
-plt.imshow(mmcv.flow2rgb(flow))
 plt.show()
+
 
 
 

@@ -16,7 +16,7 @@ class GuidedBackprop():
     """
        Produces gradients generated with guided back propagation from the given image
     """
-    def __init__(self, model,mode,lr_relu=True):
+    def __init__(self, model,mode):
         self.model = model
         self.gradients = None
         self.forward_relu_outputs = []
@@ -25,7 +25,6 @@ class GuidedBackprop():
         self.update_relus()
         self.hook_layers()
         self.mode = mode
-        self.lr_relu = lr_relu
     def hook_layers(self):
         def hook_function(module, grad_in, grad_out):
             self.gradients = grad_in[0]
@@ -45,10 +44,7 @@ class GuidedBackprop():
             # Get last forward output
             corresponding_forward_output = self.forward_relu_outputs[-1]
             corresponding_forward_output[corresponding_forward_output >= 0.] = 1
-            if self.lr_relu:
-                corresponding_forward_output[corresponding_forward_output < 0.] = -0.1
-            else:
-                corresponding_forward_output[corresponding_forward_output < 0.] = 0.0
+            corresponding_forward_output[corresponding_forward_output < 0.] = -0.1
 
             if self.mode =='gb':
                 modified_grad_out =  corresponding_forward_output*torch.clamp(grad_in[0], min=0.0)
