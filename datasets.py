@@ -39,11 +39,8 @@ class MpiSintel(data.Dataset):
 
         flow_root = join(root, 'flow')
         image_root = join(root, dstype)
-        print(image_root)
 
         file_list = sorted(glob(join(flow_root, '*/*.flo')))
-        print('file_list')
-        print(file_list)
         self.flow_list = []
         self.image_list = []
 
@@ -59,16 +56,14 @@ class MpiSintel(data.Dataset):
             img1 = join(image_root, fprefix + "%04d"%(fnum+0) + '.png')
             img2 = join(image_root, fprefix + "%04d"%(fnum+1) + '.png')
 
-            print(img1,img2)
+            #print(img1,img2)
             if not isfile(img1) or not isfile(img2) or not isfile(file):
                 continue
 
             self.image_list += [[img1, img2]]
             self.flow_list += [file]
-        print(self.image_list)
 
         self.size = len(self.image_list)
-        print(self.size)
         self.frame_size = frame_utils.read_gen(self.image_list[0][0]).shape
 
         if (self.render_size[0] < 0) or (self.render_size[1] < 0) or (self.frame_size[0]%64) or (self.frame_size[1]%64):
