@@ -32,3 +32,5 @@ viz_im/
 inter_flow/
 
 grads/
+
+act_diff/
