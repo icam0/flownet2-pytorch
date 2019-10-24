@@ -5,6 +5,7 @@ _ext
 work
 work/*
 _ext/
+
 \.DS_Store
 
 \.idea/encodings\.xml
@@ -22,3 +23,28 @@ networks/resample2d_package/resample2d_cuda\.egg-info/
 geometry/
 
 checkpoints/
+
+.DS_Store
+
+viz_layer/
+
+viz_im/
+
+viz_flownet/
+
+plots/
+
+networks/
+
+inter_flow/
+
+input_images/
+
+grads/
+
+checkpoints/
+
+act_diff/
+
+.idea/
+
