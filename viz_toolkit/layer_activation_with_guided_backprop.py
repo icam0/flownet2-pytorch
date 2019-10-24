@@ -45,7 +45,7 @@ class GuidedBackprop():
             corresponding_forward_output = self.forward_relu_outputs[-1]
             corresponding_forward_output[corresponding_forward_output >= 0.] = 1
             corresponding_forward_output[corresponding_forward_output < 0.] = -0.1
-
+            del self.forward_relu_outputs[-1]  # Remove last forward output
             if self.mode =='gb':
                 modified_grad_out =  corresponding_forward_output*torch.clamp(grad_in[0], min=0.0)
             elif self.mode =='deconv':
@@ -53,7 +53,9 @@ class GuidedBackprop():
             elif self.mode =='backprop':
                 modified_grad_out = corresponding_forward_output*grad_in[0]
 
-            del self.forward_relu_outputs[-1]  # Remove last forward output
+            elif self.mode=='backprop-check':
+                return None
+
             return (modified_grad_out,)
 
         def relu_forward_hook_function(module, ten_in, ten_out):

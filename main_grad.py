@@ -18,7 +18,7 @@ inference_dataset, inference_loader = load_dataset.load_dataset()
 inp_h, inp_w = inference_dataset.render_size[0], inference_dataset.render_size[1]
 
 #get the layer details and register forward hook
-layer_name_idx = 4
+layer_name_idx = 0
 layer_flat_idx = layer_name_idx*2+1
 nr_of_samples, layer_name, fmap_h, fmap_w, filters_layer, recep_field_layer, reduction_power = flownet2def.get_layer_details(layer_name_idx,inp_h,inp_w)
 hook_class = HookClass.HookClass(model,layer_name,nr_of_samples,filters_layer,fmap_h,fmap_w)
